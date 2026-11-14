@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#12131a" />
+<title>山间 · 静心空间</title>
+<meta name="description" content="一个可以走进去的 3D 静心空间：在山间小亭里坐一会儿，做 108 次呼吸，拨一拨数息珠。无需注册，不收集信息。" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="山间 · 静心空间" />
+<meta property="og:description" content="给自己十分钟，什么都不用做。一个可以走进去的 3D 静心空间。" />
+<meta property="og:image" content="https://kevinshan555.github.io/shanjian/assets/og.jpg" />
+<meta property="og:url" content="https://kevinshan555.github.io/shanjian/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="山间 · 静心空间" />
+<meta name="twitter:description" content="给自己十分钟，什么都不用做。" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2312131a'/%3E%3Cpath d='M10 44 L26 18 L34 30 L40 22 L54 44 Z' fill='%23e8b06a'/%3E%3Ccircle cx='46' cy='17' r='5' fill='%23f3d9b0'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div id="app" class="is-loading">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="山间 · 静心空间">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">山间<em>静心空间</em></span>
+      </a>
+      <div class="top-actions">
+        <button id="btn-sound" class="icon-btn" type="button" aria-label="打开声音设置" title="声音">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.3-3.9v7.8A4.5 4.5 0 0 0 16.5 12zM14.2 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9.1 9.1 0 0 0 0-17.6z"/></svg>
+        </button>
+        <button id="btn-about" class="text-btn" type="button">说明</button>
+        <button id="btn-full" class="icon-btn" type="button" aria-label="全屏" title="全屏">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm14 0h2v6h-6v-2h4v-4z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="hud">
+      <div class="identity">
+        <span id="pname">山中的旅人</span>
+        <small id="status">在亭外</small>
+      </div>
+      <div class="timer" id="timer">00:00</div>
+    </div>
+
+    <div class="hint" id="hint">拖动画面环顾 · WASD / 摇杆移动 · 走近蒲团静坐</div>
+
+    <div class="joystick" id="joystick" aria-hidden="true">
+      <div class="joystick-ring"></div>
+      <div class="joystick-knob" id="joystick-knob"></div>
+    </div>
+
+    <div class="actions">
+      <button id="btn-sit" class="pill primary" type="button">静坐</button>
+      <button id="btn-breathe" class="pill ghost hidden" type="button">呼吸 108</button>
+      <button id="btn-beads" class="pill ghost" type="button">数息珠</button>
+      <button id="btn-woodfish" class="pill ghost" type="button">木鱼</button>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- 开场 -->
+  <div class="intro" id="intro">
+    <div class="intro-bg" aria-hidden="true"></div>
+    <div class="intro-card">
+      <p class="eyebrow">A QUIET PLACE IN THE MOUNTAINS</p>
+      <h1>山间</h1>
+      <p class="lead">给自己十分钟，<br />什么都不用做。</p>
+      <button id="btn-enter" class="enter-btn" type="button">进入山间</button>
+      <p class="fineprint">无需注册 · 不收集个人信息 · 非宗教服务</p>
+    </div>
+    <p class="intro-foot">建议戴上耳机 · 全程约 3–15 分钟</p>
+  </div>
+
+  <!-- 呼吸 -->
+  <div class="breath hidden" id="breath" role="dialog" aria-modal="true" aria-label="呼吸练习">
+    <div class="breath-inner">
+      <p class="breath-kicker" id="breath-kicker">跟着圆圈</p>
+      <div class="breath-stage">
+        <div class="breath-ring"></div>
+        <div class="breath-circle" id="breath-circle"></div>
+        <div class="breath-word" id="breath-word">吸气</div>
+      </div>
+      <p class="breath-count"><span id="breath-count">0</span> <em>/ 108 息</em></p>
+      <button id="btn-breath-exit" class="text-btn light" type="button">先到这里</button>
+    </div>
+  </div>
+
+  <!-- 数息珠 -->
+  <div class="panel beads hidden" id="beads" role="dialog" aria-modal="true" aria-label="数息珠">
+    <div class="panel-head">
+      <h2>数息珠</h2>
+      <button class="close-btn" data-close="beads" type="button" aria-label="关闭">×</button>
+    </div>
+    <p class="panel-sub">一呼一吸，拨一颗。一轮 108 颗。</p>
+    <div class="beads-grid" id="beads-grid"></div>
+    <div class="beads-foot">
+      <p><span id="beads-count">0</span> / 108</p>
+      <button id="btn-beads-reset" class="text-btn light" type="button">重新开始</button>
+    </div>
+  </div>
+
+  <!-- 声音 -->
+  <div class="panel sound hidden" id="sound-panel" role="dialog" aria-modal="true" aria-label="声音设置">
+    <div class="panel-head">
+      <h2>山间的声音</h2>
+      <button class="close-btn" data-close="sound-panel" type="button" aria-label="关闭">×</button>
+    </div>
+    <label class="switch"><span>环境声</span><input type="checkbox" id="amb-master" checked /><i></i></label>
+    <label class="switch"><span>风声</span><input type="checkbox" id="amb-wind" checked /><i></i></label>
+    <label class="switch"><span>鸟鸣</span><input type="checkbox" id="amb-birds" checked /><i></i></label>
+    <label class="switch"><span>溪流</span><input type="checkbox" id="amb-stream" checked /><i></i></label>
+    <label class="switch"><span>远处钟声</span><input type="checkbox" id="amb-bell" checked /><i></i></label>
+    <p class="panel-note">声音由浏览器实时合成，不加载任何音频文件。</p>
+  </div>
+
+  <!-- 说明 -->
+  <div class="panel about hidden" id="about" role="dialog" aria-modal="true" aria-label="关于与说明">
+    <div class="panel-head">
+      <h2>关于山间</h2>
+      <button class="close-btn" data-close="about" type="button" aria-label="关闭">×</button>
+    </div>
+    <div class="about-body">
+      <p>这是一个可以走进去的 3D 静心空间。你可以在山间小亭里走一走、坐一会儿，做 108 次呼吸，拨一拨数息珠，或者只是听着风声发呆。</p>
+      <h3>怎么玩</h3>
+      <ul>
+        <li>拖动画面环顾四周；滚轮或双指缩放。</li>
+        <li>电脑用 WASD / 方向键移动；手机用左下角摇杆。</li>
+        <li>走近蒲团，点“静坐”；坐下后可以开始“呼吸 108”。</li>
+        <li>“数息珠”与“木鱼”随时可用。</li>
+      </ul>
+      <h3>关于木鱼</h3>
+      <p>“木鱼”是传统打击乐器，在本站仅作为节奏放松的音效使用，不涉及任何宗教仪式。</p>
+      <h3>重要说明</h3>
+      <p class="warn">本网站为静心与放松体验，不提供宗教仪式、祈福、法事、供奉、捐赠等任何宗教服务，也不涉及宗教信息传播。亭中其他身影是场景的一部分，并非真实在线用户。本站为纯静态页面，不在服务器保存你的任何个人信息。</p>
+      <p class="warn">本网站不构成医疗或心理治疗建议。如果你正经历严重的焦虑、抑郁或睡眠问题，请寻求专业帮助。</p>
+      <p class="meta">山间 · 静心空间 · 2026</p>
+    </div>
+  </div>
+
+  <noscript><div class="noscript">需要开启 JavaScript 才能进入山间。</div></noscript>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
