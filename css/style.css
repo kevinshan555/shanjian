@@ -522,6 +522,42 @@ body.touch .joystick { display: block; }
 .switch input:checked + i { background: rgba(232, 176, 106, 0.55); }
 .switch input:checked + i::after { transform: translateX(18px); background: #1c1409; }
 
+/* share */
+.share { width: min(382px, 90vw); }
+.share .panel-sub { text-align: center; margin-bottom: 12px; }
+.qr-wrap {
+  width: 228px;
+  margin: 8px auto 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f4ead9;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.qr-wrap img { display: block; width: 200px; height: 200px; }
+.share-url {
+  margin: 0 0 14px;
+  font-size: 10.5px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  word-break: break-all;
+}
+.copy-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(232, 176, 106, 0.5);
+  background: rgba(232, 176, 106, 0.1);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.copy-btn:hover { background: rgba(232, 176, 106, 0.2); }
+.copy-btn:active { transform: scale(0.985); }
+
 /* about */
 .about { width: min(500px, 92vw); }
 .about-body { font-size: 13px; line-height: 1.95; color: rgba(239, 231, 218, 0.86); }

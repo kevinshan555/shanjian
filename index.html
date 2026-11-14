@@ -28,6 +28,9 @@
         <span class="brand-text">山间<em>静心空间</em></span>
       </a>
       <div class="top-actions">
+        <button id="btn-share" class="icon-btn" type="button" aria-label="分享" title="分享">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.1a3 3 0 0 0-2 .8l-6.9-4a3.2 3.2 0 0 0 0-1.8l6.8-4a3 3 0 1 0-.9-2.1c0 .3 0 .5.1.8l-6.9 4a3 3 0 1 0 0 4.4l7 4.1c0 .2-.1.5-.1.7a3 3 0 1 0 3-2.9z"/></svg>
+        </button>
         <button id="btn-sound" class="icon-btn" type="button" aria-label="打开声音设置" title="声音">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.3-3.9v7.8A4.5 4.5 0 0 0 16.5 12zM14.2 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9.1 9.1 0 0 0 0-17.6z"/></svg>
         </button>
@@ -104,6 +107,19 @@
     </div>
   </div>
 
+  <!-- 分享 -->
+  <div class="panel share hidden" id="share" role="dialog" aria-modal="true" aria-label="分享山间">
+    <div class="panel-head">
+      <h2>分享山间</h2>
+      <button class="close-btn" data-close="share" type="button" aria-label="关闭">×</button>
+    </div>
+    <p class="panel-sub">把这座山，分享给一个需要安静的人。</p>
+    <div class="qr-wrap"><img id="qr-img" alt="扫码打开山间" width="200" height="200" /></div>
+    <p class="share-url" id="share-url">https://kevinshan555.github.io/shanjian/</p>
+    <button id="btn-copy" class="copy-btn" type="button">复制链接</button>
+    <p class="panel-note">微信里打开后，点右上角 ··· 也能直接分享给朋友或群。</p>
+  </div>
+
   <!-- 声音 -->
   <div class="panel sound hidden" id="sound-panel" role="dialog" aria-modal="true" aria-label="声音设置">
     <div class="panel-head">
@@ -145,6 +161,7 @@
   <noscript><div class="noscript">需要开启 JavaScript 才能进入山间。</div></noscript>
 
   <script src="vendor/three.min.js"></script>
+  <script src="vendor/qrcode.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/main.js"></script>
 </body>

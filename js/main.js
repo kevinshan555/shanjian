@@ -1036,6 +1036,21 @@
   /* ============================================================
    * UI 事件
    * ============================================================ */
+  function ensureQR() {
+    var img = $("#qr-img");
+    if (img.src) return;
+    var url = location.href.split("#")[0];
+    $("#share-url").textContent = url;
+    try {
+      var qr = qrcode(0, "M");
+      qr.addData(url);
+      qr.make();
+      img.src = qr.createDataURL(8, 4);
+    } catch (e) {
+      img.alt = "二维码生成失败，请直接复制链接";
+    }
+  }
+
   function toast(text) {
     var el = $("#toast");
     el.textContent = text;
@@ -1098,6 +1113,33 @@
   $("#btn-about").addEventListener("click", function () {
     openPanel("about");
   });
+  $("#btn-share").addEventListener("click", function () {
+    ensureQR();
+    openPanel("share");
+  });
+  $("#btn-copy").addEventListener("click", function () {
+    var url = $("#share-url").textContent;
+    var btn = this;
+    var done = function () {
+      btn.textContent = "已复制";
+      setTimeout(function () { btn.textContent = "复制链接"; }, 1600);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(done).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+    function fallbackCopy() {
+      var ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      ta.remove();
+    }
+  });
   $("#btn-full").addEventListener("click", function () {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
@@ -1114,7 +1156,7 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
-      ["beads", "sound-panel", "about"].forEach(closePanel);
+      ["beads", "sound-panel", "about", "share"].forEach(closePanel);
       if (breath.active) stopBreath();
     }
   });
