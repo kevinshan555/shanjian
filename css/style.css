@@ -546,6 +546,8 @@ body.touch .joystick { display: block; }
   color: rgba(239, 231, 218, 0.78);
 }
 .about-body .meta { margin-top: 18px; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); }
+.about-body a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(232, 176, 106, 0.35); }
+.about-body a:hover { color: var(--cream); }
 
 /* toast */
 .toast {
